@@ -1,5 +1,5 @@
 {
-  "name": "puppeteer-screen-recorder",
+  "name": "puppeteer-screen-recorder-args",
   "version": "2.1.2",
   "description": "A puppeteer Plugin that uses the native chrome devtool protocol for capturing video frame by frame. Also supports an option to follow pages that are opened by the current page object",
   "main": "build/main/index.js",
@@ -10,12 +10,15 @@
   ],
   "repository": "https://github.com/prasanaworld/puppeteer-screen-recorder",
   "author": {
-    "name": "Prasana Kannan",
-    "url": "https://www.linkedin.com/in/prasanakannan/"
+    "name": "PicoBash",
+    "url": "https://github.com/PicoBash/puppeteer-screen-recorder/"
   },
   "homepage": "https://prasanaworld.github.io/puppeteer-screen-recorder/",
   "license": "MIT",
   "keywords": [
+    "puppeteer-args",
+    "args",
+    "PicoBash",
     "puppeteer",
     "screen",
     "screen recorder",
