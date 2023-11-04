@@ -64,13 +64,13 @@ Supports multiple video format like AVI, MP4, MOV and WEBM. Enable support for w
 Using Npm
 
 ```sh
-npm install puppeteer-screen-recorder
+npm install puppeteer-screen-recorder-arg
 ```
 
 Using Yarn
 
 ```sh
-yarn add puppeteer-screen-recorder
+yarn add puppeteer-screen-recorder-arg
 ```
 
 ### API Description
@@ -79,10 +79,10 @@ yarn add puppeteer-screen-recorder
 
 ```javascript
 // ES6
-import { PuppeteerScreenRecorder } from 'puppeteer-screen-recorder';
+import { PuppeteerScreenRecorder } from 'puppeteer-screen-recorder-arg';
 
 // or commonjs
-const { PuppeteerScreenRecorder } = require('puppeteer-screen-recorder');
+const { PuppeteerScreenRecorder } = require('puppeteer-screen-recorder-arg');
 ```
 
 **2. Setup the Configuration object.**
@@ -165,7 +165,7 @@ await recorder.stop();
 
 ```javascript
 const puppeteer = require('puppeteer');
-const { PuppeteerScreenRecorder } = require('puppeteer-screen-recorder');
+const { PuppeteerScreenRecorder } = require('puppeteer-screen-recorder-arg');
 
 (async () => {
   const browser = await puppeteer.launch();
