@@ -23,7 +23,7 @@ async function testStartMethod(format: string, isStream: boolean) {
     await recorder.start(format);
   }
   await page.goto('https://developer.mozilla.org/en-US/docs/Web/CSS/animation');
-  await page.waitFor(10 * 1000);
+  //await page.waitFor(10 * 1000);
   await recorder.stop();
   await browser.close();
 }
