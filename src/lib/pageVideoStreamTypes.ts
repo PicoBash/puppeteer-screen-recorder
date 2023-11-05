@@ -129,6 +129,20 @@ export type PuppeteerScreenRecorderOptions = {
    * @description  Numerical value specify duration (in seconds) to record the video. By default video is recorded till stop method is invoked`. (Note: It's mandatory to invoke Stop() method even if this value is set)
    */
   readonly recordDurationLimit?: number;
+
+  /**
+   * @name ffmpegOutputOptions
+   * @member PuppeteerScreenRecorderOptions
+   * @description  String Array value specify the output options for ffmpeg.
+   */
+  readonly ffmpegOutputOptions?: string[];
+
+  /**
+   * @name ffmpegInputOptions
+   * @member PuppeteerScreenRecorderOptions
+   * @description  String Array value specify the input options for ffmpeg.
+   */
+  readonly ffmpegInputOptions?: string[];
 };
 
 /** @ignore */

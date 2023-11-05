@@ -177,6 +177,7 @@ export default class PageVideoStreamWriter extends EventEmitter {
       .autopad(this.autopad.activation, this.autopad?.color)
       .inputFormat('image2pipe')
       .inputFPS(this.options.fps)
+      .inputOptions(this.options.ffmpegInputOptions)
       .outputOptions(`-crf ${this.options.videoCrf ?? 23}`)
       .outputOptions(`-preset ${this.options.videoPreset || 'ultrafast'}`)
       .outputOptions(`-pix_fmt ${this.options.videoPixelFormat || 'yuv420p'}`)
@@ -184,6 +185,7 @@ export default class PageVideoStreamWriter extends EventEmitter {
       .outputOptions(`-maxrate ${this.options.videoBitrate || 1000}`)
       .outputOptions('-framerate 1')
       .outputOptions(`-threads ${cpu}`)
+      .outputOptions(this.options.ffmpegOutputOptions)
       .on('progress', (progressDetails) => {
         this.duration = progressDetails.timemark;
       });
