@@ -190,10 +190,10 @@ export default class PageVideoStreamWriter extends EventEmitter {
       });
 
     if(this.options.ffmpegInputOptions){
-      outputStream(this.options.ffmpegInputOptions)
+      outputStream.inputOptions(this.options.ffmpegInputOptions)
     }
     if(this.options.ffmpegOutputOptions){
-      outputStream(this.options.ffmpegOutputOptions)
+      outputStream.outputOptions(this.options.ffmpegOutputOptions)
     }
     if (this.options.recordDurationLimit) {
       outputStream.duration(this.options.recordDurationLimit);
