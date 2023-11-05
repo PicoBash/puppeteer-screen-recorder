@@ -23,7 +23,6 @@ const defaultPuppeteerScreenRecorderOptions: PuppeteerScreenRecorderOptions = {
     height: null,
   },
   aspectRatio: '4:3',
-  ffmpegInputOptions: [''],
 };
 
 /**
