@@ -127,6 +127,12 @@ export default class PageVideoStreamWriter extends EventEmitter {
       const outputStream = this.getDestinationStream();
 
       outputStream
+        .on('stderr', (stderrLine) => {
+          console.log('Stderr output:', stderrLine)
+        })
+        .on('start', (commandLine) => {
+          console.log('ffmpeg command: ', commandLine);
+        })
         .on('error', (e) => {
           this.handleWriteStreamError(e.message);
           resolve(false);
@@ -169,32 +175,43 @@ export default class PageVideoStreamWriter extends EventEmitter {
     const cpu = Math.max(1, os.cpus().length - 1);
     const outputStream = ffmpeg({
       source: this.videoMediatorStream,
-      priority: 20,
+      //priority: 20,
     })
-      .videoCodec(this.options.videoCodec || 'libx264')
-      .size(this.videoFrameSize)
-      .aspect(this.options.aspectRatio || '4:3')
-      .autopad(this.autopad.activation, this.autopad?.color)
-      .inputFormat('image2pipe')
-      .inputFPS(this.options.fps)
 
-      .outputOptions(`-crf ${this.options.videoCrf ?? 23}`)
-      .outputOptions(`-preset ${this.options.videoPreset || 'ultrafast'}`)
-      .outputOptions(`-pix_fmt ${this.options.videoPixelFormat || 'yuv420p'}`)
-      .outputOptions(`-minrate ${this.options.videoBitrate || 1000}`)
-      .outputOptions(`-maxrate ${this.options.videoBitrate || 1000}`)
-      .outputOptions('-framerate 1')
-      .outputOptions(`-threads ${cpu}`)
+
+
+    if (this.options.ffmpegInputOptions) {
+      outputStream.inputOptions(this.options.ffmpegInputOptions)
+    }
+
+    // Add the facecam as a second input
+    outputStream.input("./video/facecam.mp4");
+
+    // Apply the overlay filter within the complexFilter
+    outputStream.complexFilter([
+      // Assuming the first input is [0:v] and the facecam is [1:v]
+      "[1:v]scale=400:300[facecam]", // Scale facecam to desired size
+      "[0:v][facecam]overlay=W-w-10:H-h-10[output]" // Overlay facecam onto the main video
+    ]);
+
+    if (this.options.ffmpegOutputOptions) {
+      outputStream.outputOptions(this.options.ffmpegOutputOptions)
+    }
+
+    console.log(cpu, this.autopad, this.videoFrameSize)
+
+    outputStream
+      .inputFormat('image2pipe')
+      .videoCodec(this.options.videoCodec || 'libx264')
+      .toFormat('mp4') // Change to MP4 format
+      .outputOptions('-crf', '23', '-preset', 'fast')
+
+
+      // Handle progress events
       .on('progress', (progressDetails) => {
         this.duration = progressDetails.timemark;
       });
 
-    if(this.options.ffmpegInputOptions){
-      outputStream.inputOptions(this.options.ffmpegInputOptions)
-    }
-    if(this.options.ffmpegOutputOptions){
-      outputStream.outputOptions(this.options.ffmpegOutputOptions)
-    }
     if (this.options.recordDurationLimit) {
       outputStream.duration(this.options.recordDurationLimit);
     }
@@ -257,9 +274,9 @@ export default class PageVideoStreamWriter extends EventEmitter {
 
   private trimFrame(fameList: pageScreenFrame[], chunckEndTime: number): pageScreenFrame[] {
     return fameList.map((currentFrame: pageScreenFrame, index: number) => {
-      const endTime = (index !== fameList.length-1) ? fameList[index+1].timestamp : chunckEndTime;
-      const duration = endTime - currentFrame.timestamp; 
-        
+      const endTime = (index !== fameList.length - 1) ? fameList[index + 1].timestamp : chunckEndTime;
+      const duration = endTime - currentFrame.timestamp;
+
       return {
         ...currentFrame,
         duration,
