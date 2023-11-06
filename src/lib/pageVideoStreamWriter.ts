@@ -170,7 +170,7 @@ export default class PageVideoStreamWriter extends EventEmitter {
       outputStream.pipe(writableStream);
     });
   }
-//test
+
   private getDestinationStream(): ffmpeg {
     const cpu = Math.max(1, os.cpus().length - 1);
     const outputStream = ffmpeg({
@@ -184,15 +184,6 @@ export default class PageVideoStreamWriter extends EventEmitter {
       outputStream.inputOptions(this.options.ffmpegInputOptions)
     }
 
-    // Add the facecam as a second input
-    outputStream.input("./video/facecam.mp4");
-
-    // Apply the overlay filter within the complexFilter
-    outputStream.complexFilter([
-      // Assuming the first input is [0:v] and the facecam is [1:v]
-      "[1:v]scale=400:300[facecam]", // Scale facecam to desired size
-      "[0:v][facecam]overlay=W-w-10:H-h-10[output]" // Overlay facecam onto the main video
-    ]);
 
     if (this.options.ffmpegOutputOptions) {
       outputStream.outputOptions(this.options.ffmpegOutputOptions)
