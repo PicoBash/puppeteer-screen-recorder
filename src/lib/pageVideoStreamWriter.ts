@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import os from 'os';
+// import os from 'os';
 import { extname } from 'path';
 import { PassThrough, Writable } from 'stream';
 
@@ -52,19 +52,19 @@ export default class PageVideoStreamWriter extends EventEmitter {
     }
   }
 
-  private get videoFrameSize(): string {
-    const { width, height } = this.options.videoFrame;
+  // private get videoFrameSize(): string {
+  //   const { width, height } = this.options.videoFrame;
 
-    return width !== null && height !== null ? `${width}x${height}` : '100%';
-  }
+  //   return width !== null && height !== null ? `${width}x${height}` : '100%';
+  // }
 
-  private get autopad(): { activation: boolean; color?: string } {
-    const autopad = this.options.autopad;
+  // private get autopad(): { activation: boolean; color?: string } {
+  //   const autopad = this.options.autopad;
 
-    return !autopad
-      ? { activation: false }
-      : { activation: true, color: autopad.color };
-  }
+  //   return !autopad
+  //     ? { activation: false }
+  //     : { activation: true, color: autopad.color };
+  // }
 
   private getFfmpegPath(): string | null {
     if (this.options.ffmpeg_Path) {
@@ -164,40 +164,40 @@ export default class PageVideoStreamWriter extends EventEmitter {
       outputStream.pipe(writableStream);
     });
   }
-//test
+  //test
   private getDestinationStream(): ffmpeg {
-    const cpu = Math.max(1, os.cpus().length - 1);
+    // const cpu = Math.max(1, os.cpus().length - 1);
     const outputStream = ffmpeg({
       source: this.videoMediatorStream,
       priority: 20,
     })
-            .videoCodec(this.options.videoCodec || 'libx264')
-            // .size(this.videoFrameSize)
-            // .aspect(this.options.aspectRatio || '4:3')
-            // .autopad(this.autopad.activation, (_a = this.autopad) === null || _a === void 0 ? void 0 : _a.color)
-            .inputFormat('image2pipe')
-            // .inputFPS(this.options.fps)
-            // .outputOptions(`-crf ${(_b = this.options.videoCrf) !== null && _b !== void 0 ? _b : 23}`)
-            // .outputOptions(`-preset ${this.options.videoPreset || 'ultrafast'}`)
-            // .outputOptions(`-pix_fmt ${this.options.videoPixelFormat || 'yuv420p'}`)
-            // .outputOptions(`-minrate ${this.options.videoBitrate || 1000}`)
-            // .outputOptions(`-maxrate ${this.options.videoBitrate || 1000}`)
-            // .outputOptions('-framerate 1')
-            // .outputOptions(`-threads ${cpu}`)
-            .on('progress', (progressDetails) => {
-            this.duration = progressDetails.timemark;
-        });
-        console.log("test")
-        if (this.options.ffmpegInputOptions) {
-            outputStream.inputOptions(this.options.ffmpegInputOptions);
-        }
-        if (this.options.ffmpegOutputOptions) {
-            outputStream.outputOptions(this.options.ffmpegOutputOptions);
-        }
-        if (this.options.recordDurationLimit) {
-            outputStream.duration(this.options.recordDurationLimit);
-        }
-        return outputStream;
+      .videoCodec(this.options.videoCodec || 'libx264')
+      // .size(this.videoFrameSize)
+      // .aspect(this.options.aspectRatio || '4:3')
+      // .autopad(this.autopad.activation, (_a = this.autopad) === null || _a === void 0 ? void 0 : _a.color)
+      .inputFormat('image2pipe')
+      // .inputFPS(this.options.fps)
+      // .outputOptions(`-crf ${(_b = this.options.videoCrf) !== null && _b !== void 0 ? _b : 23}`)
+      // .outputOptions(`-preset ${this.options.videoPreset || 'ultrafast'}`)
+      // .outputOptions(`-pix_fmt ${this.options.videoPixelFormat || 'yuv420p'}`)
+      // .outputOptions(`-minrate ${this.options.videoBitrate || 1000}`)
+      // .outputOptions(`-maxrate ${this.options.videoBitrate || 1000}`)
+      // .outputOptions('-framerate 1')
+      // .outputOptions(`-threads ${cpu}`)
+      .on('progress', (progressDetails) => {
+        this.duration = progressDetails.timemark;
+      });
+    console.log('test');
+    if (this.options.ffmpegInputOptions) {
+      outputStream.inputOptions(this.options.ffmpegInputOptions);
+    }
+    if (this.options.ffmpegOutputOptions) {
+      outputStream.outputOptions(this.options.ffmpegOutputOptions);
+    }
+    if (this.options.recordDurationLimit) {
+      outputStream.duration(this.options.recordDurationLimit);
+    }
+    return outputStream;
   }
 
   private handleWriteStreamError(errorMessage): void {
@@ -241,7 +241,10 @@ export default class PageVideoStreamWriter extends EventEmitter {
         0,
         numberOfFramesToSplice
       );
-      this.processFrameBeforeWrite(framesToProcess, this.screenCastFrames[0].timestamp);
+      this.processFrameBeforeWrite(
+        framesToProcess,
+        this.screenCastFrames[0].timestamp
+      );
     }
 
     const insertionIndex = this.findSlot(frame.timestamp);
@@ -253,11 +256,17 @@ export default class PageVideoStreamWriter extends EventEmitter {
     }
   }
 
-  private trimFrame(fameList: pageScreenFrame[], chunckEndTime: number): pageScreenFrame[] {
+  private trimFrame(
+    fameList: pageScreenFrame[],
+    chunckEndTime: number
+  ): pageScreenFrame[] {
     return fameList.map((currentFrame: pageScreenFrame, index: number) => {
-      const endTime = (index !== fameList.length-1) ? fameList[index+1].timestamp : chunckEndTime;
-      const duration = endTime - currentFrame.timestamp; 
-        
+      const endTime =
+        index !== fameList.length - 1
+          ? fameList[index + 1].timestamp
+          : chunckEndTime;
+      const duration = endTime - currentFrame.timestamp;
+
       return {
         ...currentFrame,
         duration,
@@ -265,7 +274,10 @@ export default class PageVideoStreamWriter extends EventEmitter {
     });
   }
 
-  private processFrameBeforeWrite(frames: pageScreenFrame[], chunckEndTime: number): void {
+  private processFrameBeforeWrite(
+    frames: pageScreenFrame[],
+    chunckEndTime: number
+  ): void {
     const processedFrames = this.trimFrame(frames, chunckEndTime);
 
     processedFrames.forEach(({ blob, duration }) => {
