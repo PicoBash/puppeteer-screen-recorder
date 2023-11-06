@@ -135,14 +135,14 @@ export type PuppeteerScreenRecorderOptions = {
    * @member PuppeteerScreenRecorderOptions
    * @description  String Array value specify the output options for ffmpeg.
    */
-  readonly ffmpegOutputOptions?: string[];
+  readonly ffmpegOutputOptions?: string[] | null;
 
   /**
    * @name ffmpegInputOptions
    * @member PuppeteerScreenRecorderOptions
    * @description  String Array value specify the input options for ffmpeg.
    */
-  readonly ffmpegInputOptions?: string[];
+  readonly ffmpegInputOptions?: string[] | null;
 };
 
 /** @ignore */
